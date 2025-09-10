@@ -104,8 +104,8 @@ Visit [http://localhost:8000](http://localhost:8000) in your browser.
 ## 🖼️ Screenshots
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/placeholder/form.png" width="400" alt="Upload Form">
-  <img src="https://user-images.githubusercontent.com/placeholder/results.png" width="400" alt="Results Page">
+  <img src="public/screenshots/s1.png" width="800" alt="Upload Form"><br><br>
+  <img src="public/screenshots/s2.png" width="800" alt="Results Page">
 </p>
 
 ---
