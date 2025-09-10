@@ -4,7 +4,6 @@
 <head>
   <meta charset="utf-8">
   <title>Results</title>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
   <style>
     body {
       font-family: system-ui;
@@ -35,6 +34,7 @@
 <body>
   <div style="display:flex;justify-content:space-between;align-items:center">
     <h2>Analysis Results</h2>
+    <!-- PDF export form -->
     <form action="{{ route('export.pdf') }}" method="post">
       @csrf
       <input type="hidden" name="payload" value="{{ $payload }}">
@@ -45,6 +45,7 @@
     <div style="display:flex; align-items:center; gap:12px;">
       <h3 style="margin:0;">Category Totals</h3>
       <div style="margin-left:auto;">
+        <!-- Chart type selector -->
         <label for="chartType" style="font-weight:600; margin-right:6px;">View as:</label>
         <select id="chartType">
           <option value="bar" selected>Vertical Bar</option>
@@ -59,7 +60,7 @@
         </select>
       </div>
     </div>
-    <!-- NEW: wrapper + size-controlled canvas -->
+    <!-- Chart container -->
     <div class="chart-wrap">
       <canvas id="categoryChart" class="chart-canvas"></canvas>
     </div>
@@ -80,6 +81,7 @@
         </tr>
       </thead>
       <tbody id="transactionsBody">
+        <!-- Render each transaction row -->
         @foreach($rows as $r)
         <tr>
           <td>{{ $r['description'] }}</td>
@@ -91,33 +93,17 @@
         @endforeach
       </tbody>
     </table>
-    <!-- Pagination controls -->
+    <!-- Pagination controls (injected by JS) -->
     <div id="tx-pagination" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-end;margin-top:12px;">
       <!-- buttons injected by JS -->
     </div>
   </div>
-  <!-- <div class="card">
-    <h3>All Transactions</h3>
-    <table>
-      <thead><tr><th>Description</th><th>Amount</th><th>Category</th><th>Date</th><th>Currency</th></tr></thead>
-      <tbody>
-      @foreach($rows as $r)
-        <tr>
-          <td>{{ $r['description'] }}</td>
-          <td>{{ number_format($r['amount'],2) }}</td>
-          <td>{{ $r['category'] }}</td>
-          <td>{{ $r['date'] ?? '' }}</td>
-          <td>{{ $r['currency'] ?? '' }}</td>
-        </tr>
-      @endforeach
-      </tbody>
-    </table>
-  </div> -->
-  <!-- Keep ONLY this include (remove the one in <head>) -->
+  
+  <!-- Chart.js library for rendering charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
   <script>
-    // ===== Existing data =====
-    const totals = @json($summary['category_totals'] ?? (object)[]);
+    // ===== Prepare data for chart =====
+    const totals = {!! json_encode($summary['category_totals'] ?? (object)[]) !!};
     const labels = Object.keys(totals);
     const values = Object.values(totals);
     // Early exit if no data (optional but helpful)
@@ -134,6 +120,7 @@
     ];
     const borderColors = baseColors.map(c => c.replace('0.6', '1'));
 
+    // Dataset for bar charts
     function barsDataset() {
       return {
         label: 'Totals',
@@ -144,6 +131,7 @@
       };
     }
 
+    // Datasets for stacked bar chart (positive/negative)
     function stackedDatasets() {
       const pos = values.map(v => v > 0 ? v : 0);
       const neg = values.map(v => v < 0 ? v : 0);
@@ -164,6 +152,7 @@
       ];
     }
 
+    // Common chart options
     function commonOptions(yTitle = 'Value') {
       return {
         responsive: true,
@@ -198,6 +187,7 @@
       };
     }
 
+    // Build chart config based on selected type
     function buildConfig(kind) {
       const simpleOptions = {
         responsive: true,
@@ -291,6 +281,7 @@
           options: simpleOptions
         };
       }
+      // Default to vertical bar
       return {
         type: 'bar',
         data: {
@@ -302,18 +293,21 @@
     }
     let chart;
 
+    // Render chart of selected type
     function render(kind) {
       const canvas = document.getElementById('categoryChart'); // <-- FIXED ID
       const ctx = canvas.getContext('2d');
       if (chart) chart.destroy();
       chart = new Chart(ctx, buildConfig(kind));
     }
+    // Listen for chart type changes
     document.getElementById('chartType').addEventListener('change', (e) => render(e.target.value));
     // initial render
     render('bar');
   </script>
   <!-- Pagination Script -->
   <script>
+    // Paginate the transactions table
     (function paginateTransactions() {
       const PER_PAGE = 15;
       const tbody = document.getElementById('transactionsBody');
@@ -325,6 +319,7 @@
       const pagEl = document.getElementById('tx-pagination');
       const metaEl = document.getElementById('tx-meta');
 
+      // Render a specific page of transactions
       function renderPage(n) {
         current = Math.min(Math.max(1, n), pages);
         const startIdx = (current - 1) * PER_PAGE;
@@ -342,6 +337,7 @@
         buildControls();
       }
 
+      // Create a pagination button
       function button(label, onClick, disabled = false, active = false) {
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -356,6 +352,7 @@
         return btn;
       }
 
+      // Build pagination controls
       function buildControls() {
         if (!pagEl) return;
         pagEl.innerHTML = '';
@@ -385,7 +382,7 @@
     })();
   </script>
   <style>
-    /* add once */
+    /* Chart container styling */
     .chart-wrap {
       max-width: 700px;
       /* keeps it compact on page/PDF */
