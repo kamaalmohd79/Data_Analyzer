@@ -104,7 +104,9 @@ Visit [http://localhost:8000](http://localhost:8000) in your browser.
 ## 🖼️ Screenshots
 
 <p align="center">
+<h3>Charts Screen</h3>
   <img src="public/screenshots/s1.png" width="800" alt="Upload Form"><br><br>
+<h3>Transaction Table Screen</h3>
   <img src="public/screenshots/s2.png" width="800" alt="Results Page">
 </p>
 
