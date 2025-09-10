@@ -1,7 +1,9 @@
 # Data Analyzer
 
 Analyze your Excel transaction data in seconds!</b><br>
-Upload, categorize, visualize through variation of charts, and export your financial data with ease.
+Upload, categorize, visualize through variation of charts, and export your financial data with ease.</b><br>
+
+A Laravel + Python hybrid app to upload Excel/CSV data, analyze it, categorize transactions, and generate visual reports with charts and PDFs.
 
 ---
 
@@ -41,6 +43,17 @@ Upload, categorize, visualize through variation of charts, and export your finan
 
 ---
 
+## 🛠 Frameworks Used
+
+- **Laravel 10 (PHP 8)** – Web framework for UI & backend orchestration.
+- **Python 3.13** – Data analysis and Excel parsing.
+- **Pandas + OpenPyXL** – Data processing libraries.
+- **Symfony Process** – Laravel ↔ Python integration.
+- **Chart.js** – Charting library for frontend visualization.
+- **Laravel-Dompdf** – PDF export.
+- **Laragon** – Local dev environment (PHP, MySQL, Apache/Nginx).
+---
+
 ## 📝 Expected Excel Format
 
 Your Excel file should have at least these columns:
@@ -54,6 +67,46 @@ Optional columns:
 - **Date**
 - **SpendCategory**
 - **Currency**
+
+---
+
+## 📂 Project Scaffold & Structure
+
+```text
+.
+├─ app/                     # Laravel app code (Controllers, Models, Services)
+│  ├─ Http/
+│  │  ├─ Controllers/       # Handles upload, dispatch to Python, returns views
+│  │  └─ Middleware/
+│  ├─ Models/               # Eloquent models (if used)
+│  └─ Services/             # Orchestration logic (optional)
+├─ bootstrap/               # Laravel bootstrap files
+├─ config/                  # Laravel configuration
+├─ database/                # Migrations/seeders
+├─ public/                  # Public assets
+├─ python/                  # Python analysis pipeline
+│  ├─ analyze.py            # Reads Excel, applies rules, outputs JSON
+│  ├─ requirements.txt      # pandas, openpyxl, xlrd
+│  └─ utils/                # Helpers (cleaning, categorization)
+├─ resources/
+│  ├─ views/                # Blade templates (upload form, results, charts)
+│  └─ js/                   # Optional JS assets
+├─ routes/
+│  └─ web.php               # App routes
+├─ storage/                 # Framework & app storage
+├─ tests/                   # PHPUnit tests
+├─ .env.example             # Env template
+├─ composer.json            # PHP dependencies
+├─ package.json             # Frontend deps (if any)
+└─ README.md
+```
+---
+## Execution Flow
+<img src="public/screenshots/execution-flow.png" width="800" alt="Execution diagram"><br>
+
+---
+## Data Pipeline
+<img src="public/screenshots/data-pipeline.png" width="800" alt="Data pipeline diagram"><br>
 
 ---
 
